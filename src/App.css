@@ -1,0 +1,49 @@
+/* Results Section with Filters */
+.results-section {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.results-container {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.filters-sidebar {
+  position: sticky;
+  top: 24px;
+}
+
+.flights-main {
+  min-width: 0;
+}
+
+.results-header {
+  margin-bottom: 24px;
+}
+
+.results-header h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.75rem;
+  color: #1a1a1a;
+}
+
+.results-count {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .results-container {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-sidebar {
+    position: static;
+  }
+}
