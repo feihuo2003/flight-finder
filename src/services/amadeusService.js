@@ -66,6 +66,23 @@ export const searchFlightsWithAmadeus = async (from, to, date) => {
             // Basic mapping - in a real app we'd map airline codes to names
             const airlineName = offer.validatingAirlineCodes[0] || airlineCode;
 
+            // Map all segments for connection details
+            const segments = itinerary.segments.map(seg => ({
+                departure: {
+                    airport: seg.departure.iataCode,
+                    time: new Date(seg.departure.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    date: new Date(seg.departure.at).toLocaleDateString()
+                },
+                arrival: {
+                    airport: seg.arrival.iataCode,
+                    time: new Date(seg.arrival.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    date: new Date(seg.arrival.at).toLocaleDateString()
+                },
+                airline: seg.carrierCode,
+                flightNumber: `${seg.carrierCode}${seg.number}`,
+                duration: seg.duration
+            }));
+
             return {
                 id: offer.id,
                 airline: airlineName,
@@ -77,7 +94,8 @@ export const searchFlightsWithAmadeus = async (from, to, date) => {
                 to: lastSegment.arrival.iataCode,
                 date: date,
                 duration: itinerary.duration.replace('PT', '').toLowerCase(),
-                stops: itinerary.segments.length > 1 ? `${itinerary.segments.length - 1} stop(s)` : 'Nonstop'
+                stops: itinerary.segments.length > 1 ? `${itinerary.segments.length - 1} stop(s)` : 'Nonstop',
+                segments: segments // Include all flight segments
             };
         });
 

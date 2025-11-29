@@ -3,6 +3,7 @@ import BookingModal from './BookingModal';
 
 const FlightCard = ({ flight }) => {
     const [showBookingModal, setShowBookingModal] = useState(false);
+    const [showConnections, setShowConnections] = useState(false);
 
     const handleBookNow = () => {
         setShowBookingModal(true);
@@ -10,8 +11,9 @@ const FlightCard = ({ flight }) => {
 
     const handleBookingConfirm = (confirmation) => {
         console.log('Booking confirmed:', confirmation);
-        // You could add additional logic here, like showing a toast notification
     };
+
+    const hasConnections = flight.segments && flight.segments.length > 1;
 
     return (
         <>
@@ -44,6 +46,44 @@ const FlightCard = ({ flight }) => {
                         <div className="flight-meta">
                             <span>{flight.duration}</span>
                             {flight.stops && <span className="stops">{flight.stops}</span>}
+                            {hasConnections && (
+                                <button
+                                    className="connection-toggle"
+                                    onClick={() => setShowConnections(!showConnections)}
+                                >
+                                    {showConnections ? '▼ Hide' : '▶ Show'} connections
+                                </button>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Connection Details */}
+                    {showConnections && hasConnections && (
+                        <div className="connections-detail">
+                            {flight.segments.map((segment, idx) => (
+                                <div key={idx} className="segment">
+                                    <div className="segment-header">
+                                        <span className="segment-number">Flight {idx + 1}</span>
+                                        <span className="segment-flight">{segment.flightNumber}</span>
+                                    </div>
+                                    <div className="segment-route">
+                                        <div className="segment-point">
+                                            <strong>{segment.departure.airport}</strong>
+                                            <span>{segment.departure.time}</span>
+                                        </div>
+                                        <div className="segment-arrow">→</div>
+                                        <div className="segment-point">
+                                            <strong>{segment.arrival.airport}</strong>
+                                            <span>{segment.arrival.time}</span>
+                                        </div>
+                                    </div>
+                                    {idx < flight.segments.length - 1 && (
+                                        <div className="layover-info">
+                                            ⏱ Layover in {segment.arrival.airport}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     )}
                 </div>
